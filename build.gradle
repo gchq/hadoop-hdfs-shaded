@@ -55,10 +55,18 @@ repositories {
 
 dependencies {
     compile(libs.hadoop_hdfs) {
-        exclude(module: 'slf4j-api')
-        exclude(module: 'slf4j-log4j12')
-        exclude(module: 'log4j')
-        exclude(module: 'commons-logging:commons-logging')
+        //exclude(module: 'slf4j-api')
+        //exclude(module: 'slf4j-log4j12')
+        //exclude(module: 'log4j')
+        //exclude(module: 'commons-logging:commons-logging')
+        exclude group: "org.slf4j", module: "slf4j-api"
+        exclude group: "org.slf4j", module: "slf4j-log4j12"
+        exclude group: "log4j", module: "log4j"
+        exclude group: "commons-logging", module: "commons-logging"
+
+        // We want to use the xerces impl bundled in the jdk
+        // see https://stackoverflow.com/questions/11677572/dealing-with-xerces-hell-in-java-maven
+        exclude module: 'xercesImpl'
     }
 }
 
