@@ -59,6 +59,7 @@ dependencies {
         //exclude(module: 'slf4j-log4j12')
         //exclude(module: 'log4j')
         //exclude(module: 'commons-logging:commons-logging')
+        // Exclude all logging so we can use our own SLF4J/Logback and its bridging pkgs
         exclude group: "org.slf4j", module: "slf4j-api"
         exclude group: "org.slf4j", module: "slf4j-log4j12"
         exclude group: "log4j", module: "log4j"
@@ -162,29 +163,41 @@ bintray {
 shadowJar {
     //this stops the maven classifier being 'all'. We want the default jar to be the shadow one
     classifier = ''
+    def prefix = "stroom.hadoophdfsshaded." 
+
+    // relocate package pkg, with a list of exclsuions
+    // exclusions are like 'javax/security/**'
+    def relocatePackageWithExclusions = { String pkg, List<String> exclusions ->
+        relocate (pkg, prefix + pkg) {
+            if (exclusions != null) {
+                exclusions.each { 
+                    exclude it
+                }
+            }
+        }
+    }
 
     // method for doing the relocation of a package
-    def relocatePackage = { pkg ->
-        relocate pkg, "stroom.hadoophdfsshaded." + pkg
+    def relocatePackage = { String pkg -> 
+        relocatePackageWithExclusions(pkg, [])
     }
 
     // rename all non hadoop packages to avoid conflicts
     // you can use the following to find the unique packages in the shadow jar
     // unzip -t hadoop-hdfs-shaded-SNAPSHOT.jar | sed -r 's#.*: (((\w+)\/)+).*OK#\1#g' | sed 's#.*META-INF.*##g' | uniq | grep -v hadoophdfsshaded
-    relocatePackage 'com'
-    relocatePackage 'javax'
-    relocatePackage 'org.apache.commons'
-    relocatePackage 'org.apache.html'
-    relocatePackage 'org.apache.wml'
-    relocatePackage 'org.apache.xerces'
-    relocatePackage 'org.apache.xmlcommons'
-    relocatePackage 'org.codehaus'
-    relocatePackage 'org.htrace'
-    relocatePackage 'org.jboss'
-    relocatePackage 'org.mortbay'
-    relocatePackage 'org.objectweb'
-    relocatePackage 'org.w3c'
-    relocatePackage 'org.znerd'
+    relocatePackage 'com.google'
+    relocatePackage 'com.sun.jersey'
+    relocatePackage 'com.sun.research'
+    relocatePackage 'javax.annotation'
+    relocatePackage 'javax.el'
+    relocatePackage 'javax.servlet'
+    relocatePackage 'javax.ws'
+    relocatePackageWithExclusions 'org', [
+        'org/apache/commons/logging/**', 
+        'org/apache/hadoop/**',
+        'org/w3c/dom/**',
+        'org/xml/**',
+        'org/slf4j/**']
 }
 
 tasks.build.dependsOn shadowJar
