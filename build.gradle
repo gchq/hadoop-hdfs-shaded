@@ -99,7 +99,7 @@ dependencies {
     }
 }
 
-group = 'uk.gov.gchq.stroom.hadoophdfs'
+group = 'uk.gov.gchq.hadoop.hdfs'
 version = versions.hadoopHdfsShaded
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -155,18 +155,10 @@ void configureSigning(Project project) {
 
 publishing {
     publications {
-        //mavenJava(MavenPublication) {
-            //from components.java
-        //}
-        //shadow(MavenPublication) {
-            //from components.shadow
-        //}
         shadow(MavenPublication) { publication ->
             project.shadow.component(publication)
             // No point in publishing sources/javadocs as these will be empty as the
             // shadow plugin cannot merge dependency sources/javadocs into shadow jars
-            //artifact sourcesJar
-            //artifact javadocJar
             pom {
                 name = project['name']
                 description = "Shaded version of hadoop-hdfs"
@@ -199,6 +191,19 @@ if(hasSigningKey) {
     configureSigning(project)
 }
 
+
+// Uses sonotypeUsername and sonotypePassword
+// See https://github.com/rwinch/gradle-publish-ossrh-sample
+// Also https://github.com/kit-data-manager/nexus-publish-example
+nexusPublishing {
+    repositories {
+        sonatype()    //sonatypeUsername and sonatypePassword properties are used automatically
+    }
+    // these are not strictly required. The default timeouts are set to 1 minute. But Sonatype can be really slow.
+    // If you get the error "java.net.SocketTimeoutException: timeout", these lines will help.
+    connectTimeout = Duration.ofMinutes(3)
+    clientTimeout = Duration.ofMinutes(3)
+}
 
 //shadowJar {
     //relocate 'com.sun.jersey', 'shaded.com.sun.jersey'
