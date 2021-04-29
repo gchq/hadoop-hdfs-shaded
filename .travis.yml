@@ -1,5 +1,6 @@
 language: java
-jdk: oraclejdk8
+jdk: openjdk8
+dist: xenial # jdk8 not availble on newer distros
 
 script: ./travis.script.sh
 
@@ -7,7 +8,8 @@ script: ./travis.script.sh
 deploy:
   provider: releases
   api_key:
-    secure: Krhr2uwivRfDci8bbNaGuwM4QFuHc6AWTqW7oj2gTiwI9Q0nkQ+aLa3WIiSRIKfTR/QDmzo06/XRYqryVh06Y1AE0ba7WqilBGMk68p5178rm8A58T9bzql1rrmf7kwbleSKpBOyvugYj0lMvOsaqAHASPFg+vJiJrGpMJxxbjZ2r7yZ4HM5YhlexmPW6AMFjfj/3Ic+SsHaqSHSKu2+fgAR+MCwNHYOuVfVmU6c39cOZBTTtQmEw9pkZJdOAAMe+FaLqq73JPQ0lpOC0flLJRALjuXp+jNB9nT4exX30TWG8sHmMRBsBeCP3UphAH8VXZHNLmig0A2KFTotXd+9XKhSdRK4j8nwbu6fy4Qq8Ynn95LDaitiEo7jSDwG8OtqgqAWhnbaiZTCsrYMg3pM0VBgAWRTSdbNcRoGSNOvPGnPlEpnsg/SukF82TqVkbGxPQpTh/1TZJRJgZPdz+qwg65gQ07llraLzpciOIkPH6/7VfuNPyvzVq1O6j1IYya2qu/Md/VeQyURxWLJgaSeYIqkK6PxCBM4N2yUr/re3kL2pMGgaSC4Sf3VotdI5OtWZ1qvZAXJmp1jpblvqPQonsJD9TXLtrZ0s3IEesbW1VEcdh6W5l9UMRMUIz5UM9hSgEWFvxzC5xauRuQaR9fyOMB3UEk8+WoOlnTamcwdJWQ=
+    # travis encrypt -r gchq/hadoop-hdfs-shaded <github personal access token>
+    secure: P1l+l95XJnuiwWtxzba4Z0nykAC1O5Nc3EQpnmOEGIZLf0Wtf4C9qm249+OenGj/Xf+HbVzQQBpF3OsuG7YlkkwhGgwl0mYbpObrFJy0gEzBLnTdYT6CUhaBcWmIDlHUcnO8KzDgkNYCzLab+8N/ycI770AwDuyMjpMcd2/SgoGZxNVJpejvd68g6uq7c4WhEm9Alo2sZcKzU7CAzGo/5BaWJeCt0jaKCvVdP0zDxSpDB4xcykeC3Xaqsv9/J9vDbiYY8pMuvqdfruJ5LVtpD8LDY7N4lwGaZKjrya32+b8s5FwMCA+lYGysGHI27uH5j/helXGijmcJT8QUUccgf5zgO2ZKhVernoF1Oz/bHOFONlV+kA3gDYt4An6JRmgcC2a5GQEjbGjXPBuzASW5K+Yi+EYVtEM6AyHrdrfFqeZo3bfZUBsTwrqaE1T+U+EzGNOBJKTQyOydfDX3nUQql/O8virUWtDjA3Ag1JyexNSoV07cZUKOZl6A79U1rZvzlYddMIbyg/hcJoF2n7mO2TAVvTAyb8Q6Mf01CxSB0kiJhp9yL35wywqY01OrOz5xV5X7AgQfmoRVu9RZTOiyL+ESQiNG9oJLVO/Xia4mIWPjUahvpZZ1hL/o0/J3T9yMj1mjYWW1Ic0RvxGaaVDVslAmyVf5RXdox0in/OLMq+o=
   file_glob: true
   file: build/libs/hadoop-hdfs-shaded-*-.jar
   skip_cleanup: true
